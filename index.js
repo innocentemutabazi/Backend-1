@@ -2,7 +2,7 @@ const express = require('express');
 const axios = require('axios');
 const app = express();
 const port = process.env.PORT || 3000;
-require('dotenv').config(); // Load environment variables from .env file
+require('dotenv').config();
 
 const apiKeyIpGeolocation = process.env.API_GEO;
 const apiKeyWeather = process.env.API_WEATHER;
@@ -11,16 +11,13 @@ app.get('/api/hello', async (req, res) => {
   const visitorName = req.query.visitor_name || 'Guest';
 
   try {
-    // Fetch client IP address
     const ipResponse = await axios.get('https://api.ipify.org?format=json');
     const clientIp = ipResponse.data.ip;
 
-    // Check if client IP is a loopback address
     if (clientIp === '::1' || clientIp === '127.0.0.1') {
       throw new Error('Client IP is a loopback address.');
     }
 
-    // Fetch geolocation data based on client IP
     const geoData = await axios.get(`https://api.ipgeolocation.io/ipgeo?apiKey=${apiKeyIpGeolocation}&ip=${clientIp}`);
     const city = geoData.data.city;
 
